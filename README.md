@@ -1,3 +1,6 @@
+THE ASSIGNMENTS IN THIS REPOSITORY ARE NOT FINAL YET
+{: .alert .alert-gitlab-orange}
+
 # P4 Lab
 
 ## Introduction
@@ -22,17 +25,16 @@ The description of each assignment is in it's respective folder.
 3. Assignment 3: Firewall
 * [Firewall](./assignments/firewall)
 
-4. Assignment 4: Source Routing and Quality of Service
-* [QoS](./assignments/qos)
-* [Source Routing](./assignments/source_routing)
+4. Assignment 4: Load Balancing
+* Load Balancing - COMING SOON
 
 ## Resources
 
-Presentation slides are available [online](https://courses.sidnlabs.nl/anet-2021/) and in the P4_tutorial.pdf in this repository. A P4 Cheat Sheet is also available. This contains various examples that you can refer to.
-        
+Presentation slides are available [online](https://courses.sidnlabs.nl/anet-2022/) and alternative slides from p4.org are available in the P4_tutorial.pdf in this repository. A P4 Cheat Sheet is also available. This contains various examples that you can refer to.
+
 ## Obtaining required software
 
-You can use the following VM: [P4 Ubuntu 20.04](https://drive.google.com/file/d/1hJTbheixc8Bg1Eu97dysWg74U3EGjvDN/view?usp=sharing)
+You can use the following VM: COMING SOON
 
 Use the VM as follows:
 1. Make sure you have [VirtualBox](https://www.virtualbox.org/) installed.
