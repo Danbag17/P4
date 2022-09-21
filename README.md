@@ -1,5 +1,3 @@
-# THE ASSIGNMENTS IN THIS REPOSITORY ARE NOT FINAL YET
-
 # P4 Lab
 
 ## Introduction
@@ -15,31 +13,42 @@ For your assignments you will need to write functionalities into the P4 base cod
 The description of each assignment is in it's respective folder.
 
 1. Assignment 1: Introduction and Language Basics
-* [Basic Forwarding](./assignments/basic)
-* [Basic Tunneling](./assignments/basic_tunnel)
+    * [Basic Forwarding](./assignments/basic/README.md)
+    * [Basic Tunneling](./assignments/basic_tunnel/README.md)
 
 2. Assignment 2: P4Runtime and the Control Plane
-* [P4Runtime](./assignments/p4runtime)
+    * [P4Runtime](./assignments/p4runtime/README.md)
 
 3. Assignment 3: Firewall
-* [Firewall](./assignments/firewall)
+    * [Firewall](./assignments/firewall/README.md)
 
-4. Assignment 4: Load Balancing
-* Load Balancing - COMING SOON
+4. Assignment 4: Load Balance
+    * [Load Balance ](./assignments/load_balance/README.md)
+    * Controlled Load Balance - Hopefully Coming Later
 
 ## Resources
 
-Presentation slides are available [online](https://courses.sidnlabs.nl/anet-2022/) and alternative slides from p4.org are available in the P4_tutorial.pdf in this repository. A P4 Cheat Sheet is also available. This contains various examples that you can refer to.
+Presentation slides are available [online](https://courses.sidnlabs.nl/anet-2022/) and alternative slides from p4.org are available in the P4_tutorial.pdf in this repository. A P4 Cheat Sheet is also available in this repository. This contains various examples that you can use. If you use code from any of these places, or from other places on the internet, please indicate so with a comment.
 
 ## Obtaining required software
 
-You can use the following VM: COMING SOON
+You can find the VM on the canvas files page.
 
 Use the VM as follows:
+
 1. Make sure you have [VirtualBox](https://www.virtualbox.org/) installed.
 2. Download the VM from the link.
 3. Within VirtualBox: File>Import Appliance
 4. Follow the steps
-5. This repository is already cloned in the VM under `~/Documents/`
+5. This repository is already cloned in the VM under `~/p4labs/`
+6. Please run `git pull` inside of the repository to obtain the latest version
+7. To get your code onto the VM you can: 
+    * Write the code on the VM. 
+    * Write the code on your own computer and set up a VirtualBox's shared folder to 
+      move the code to the VM
+    * Write the code on your own computer and copy it using `scp` over an ssh connection.
+      The virtual machine should be listening for ssh connections on `localhost:2222`
+8. Use proper git practices and commit your code often so that you can pull any further updates of the exercises
+
 
 The account is `p4` and the password is `p4`.

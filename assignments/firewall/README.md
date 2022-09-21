@@ -156,4 +156,4 @@ make stop
 
 ## Next Steps
 
-Congratulations, your implementation works! Proceed to the last two assignments.
+Congratulations, your implementation works! You can proceed to assignment 4.
