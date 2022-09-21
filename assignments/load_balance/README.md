@@ -5,7 +5,7 @@ a simple version of Equal-Cost Multipath Forwarding. The switch you
 will implement will use two tables to forward packets to one of two
 destination hosts at random. The first table will use a hash function
 (applied to a 5-tuple consisting of the source and destination IP
-addresses, IP protocol, and source and destination TCP ports) to
+addresses, IP protocol, and source and destination UDP ports) to
 select one of two hosts. The second table will use the computed hash
 value to forward the packet to the selected host.
 
@@ -38,11 +38,11 @@ up a switch in Mininet to test its behavior.
 3. Each host includes a small Python-based messaging client and
    server.  In `h2` and `h3`'s XTerms, start the servers:
    ```bash
-   ./receive.py
+   python3 receive.py
    ```
 4. In `h1`'s XTerm, send a message from the client:
    ```bash
-   ./send.py 10.0.0.1 "P4 is cool"
+   python3 send.py 10.0.0.1 "P4 is cool"
    ```
    The message will not be received.
 5. Type `exit` to leave each XTerm and the Mininet command line.

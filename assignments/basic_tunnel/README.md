@@ -72,12 +72,12 @@ Your job will be to do the following:
 3. Each host includes a small Python-based messaging client and server. In
 `h2`'s xterm, start the server: 
   ```bash 
-  ./receive.py
+  python3 receive.py
   ```
 4. First we will test without tunneling. In `h1`'s xterm, send a message to
 `h2`: 
   ```bash
-  ./send.py 10.0.2.2 "P4 is cool"
+  python3 send.py 10.0.2.2 "P4 is cool"
   ```
   The packet should be received at `h2`. If you examine the received packet 
   you should see that is consists of an Ethernet header, an IP header, a TCP
@@ -86,14 +86,14 @@ Your job will be to do the following:
   will instead be received by `h3`.
 5. Now we test with tunneling. In `h1`'s xterm, send a message to `h2`: 
   ```bash
-  ./send.py 10.0.2.2 "P4 is cool" --dst_id 2
+  python3 send.py 10.0.2.2 "P4 is cool" --dst_id 2
   ```
   The packet should be received at `h2`. If you examine the received packet you
   should see that is consists of an Ethernet header, a tunnel header, an IP header,
   a TCP header, and the message. 
 6. In `h1`'s xterm, send a message: 
   ```bash
-  ./send.py 10.0.3.3 "P4 is cool" --dst_id 2
+  python3 send.py 10.0.3.3 "P4 is cool" --dst_id 2
   ```
   The packet should be received at `h2`, even though that IP address is the address
   of `h3`. This is because the switch is no longer using the IP header for routing

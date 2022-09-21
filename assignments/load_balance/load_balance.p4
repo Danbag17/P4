@@ -27,18 +27,11 @@ header ipv4_t {
     bit<32> dstAddr;
 }
 
-header tcp_t {
+header udp_t {
     bit<16> srcPort;
     bit<16> dstPort;
-    bit<32> seqNo;
-    bit<32> ackNo;
-    bit<4>  dataOffset;
-    bit<3>  res;
-    bit<3>  ecn;
-    bit<6>  ctrl;
-    bit<16> window;
+    bit<16> length;
     bit<16> checksum;
-    bit<16> urgentPtr;
 }
 
 struct metadata {
@@ -48,7 +41,7 @@ struct metadata {
 struct headers {
     ethernet_t ethernet;
     ipv4_t     ipv4;
-    tcp_t      tcp;
+    udp_t      udp;
 }
 
 /*************************************************************************
@@ -119,8 +112,18 @@ control MyIngress(inout headers hdr,
     }
 
     apply {
-        /* TODO: apply ecmp_group table and ecmp_nhop table if IPv4 and TCP headers are
-         * valid and TTL hasn't reached zero */
+        /* TODO: apply ecmp_group table and ecmp_nhop table if IPv4 and UDP headers are
+         * valid and TTL hasn't reached zero 
+         */
+        
+        
+        /*
+         * Stub code to make the program compile 
+         */
+        if (true) {
+            ecmp_group.apply();
+            ecmp_nhop.apply();
+        }
     }
 }
 
@@ -188,7 +191,7 @@ control MyDeparser(packet_out packet, in headers hdr) {
     apply {
         packet.emit(hdr.ethernet);
         packet.emit(hdr.ipv4);
-        packet.emit(hdr.tcp);
+        packet.emit(hdr.udp);
     }
 }
 
