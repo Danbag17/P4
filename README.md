@@ -32,7 +32,7 @@ Presentation slides are available [online](https://courses.sidnlabs.nl/anet-2022
 
 ## Obtaining required software
 
-You can find the VM on the canvas files page.
+You can find the VM on the canvas files page: https://canvas.utwente.nl/files/3204263/download?download_frd=1
 
 Use the VM as follows:
 
