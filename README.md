@@ -24,7 +24,7 @@ The description of each assignment is in it's respective folder.
 
 4. Assignment 4: Load Balance
     * [Load Balance ](./assignments/load_balance/README.md)
-    * Controlled Load Balance - Hopefully Coming Later
+    * [Controlled Load Balance](./assignments/controlled_load_balance/README.md)
 
 ## Resources
 
