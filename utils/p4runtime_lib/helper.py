@@ -21,6 +21,8 @@ from p4.config.v1 import p4info_pb2
 from .convert import encode
 
 class P4InfoHelper(object):
+    UpdateType = p4runtime_pb2.Update
+    
     def __init__(self, p4_info_filepath):
         p4info = p4info_pb2.P4Info()
         # Load the p4info file into a skeleton P4Info object
