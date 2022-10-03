@@ -128,7 +128,7 @@ mn -c
 
 ## Next Steps
 
-Congratulations, your implementation works! If availabe, you can move on to the controlled_load_balance exercise.
+Congratulations, your implementation works! If availabe, you can move on to the [controlled_load_balance](../controlled_load_balance) exercise.
 
 ## Relevant Documentation
 
