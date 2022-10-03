@@ -32,7 +32,7 @@ Let's first compile the new P4 program, start the network, use `mycontroller.py`
    
 3. Open another shell and run the starter code:
    ```bash
-   cd ~/tutorials/exercises/p4runtime
+   cd ~/p4labs/assignments/p4runtime
    python3 mycontroller.py
    ```
    This will install the `basic.p4` program on the switches and push the rules. Since there are no ingress rules yet, you should not see ingress data here.
@@ -76,7 +76,7 @@ based on the tunnel ID.
    
 3. Open another shell and run the python code:
    ```bash
-   cd ~/tutorials/exercises/p4runtime
+   cd ~/p4labs/assignments/p4runtime
    python3 mycontroller.py
    ```
    This will install the `basic.p4` program on the switches and push the rules. If you implemented the counters and the rules correctly, you should start see traffic flowing and the counters incrementing.
