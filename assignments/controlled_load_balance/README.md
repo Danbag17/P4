@@ -34,31 +34,36 @@ The code you wrote before should still compile in this slightly different setup.
    * We use the IP address 10.0.0.1 to indicate traffic that should be
      load balanced between `h2` and `h3`.
    * install the rules from `s2-runtime.json` and `s3-runtime.json`
+2. Open another shell in this directory and run the starter code:
 
-2. You should now see a Mininet command prompt.  Open three terminals
-   for `h1`, `h2` and `h3`, respectively:
+   ```bash
+   python3 balance_controller.py
+   ```
+   The starter code will only install the egress rules and nothing else.
+3. In the Mininet command prompt, open three terminals
+   for `h1`, `h2` and `h3`:
    
    ```bash
    mininet> xterm h1 h2 h3
    ```
-3. Each host includes a small Python-based messaging client and
+4. Each host includes a small Python-based messaging client and
    server.  In `h2` and `h3`'s XTerms, start the servers:
    
    ```bash
    python3 receive.py
    ```
-4. In `h1`'s XTerm, send multiple messages from the client. 
+5. In `h1`'s XTerm, send multiple messages from the client. 
    **Note, we are using a new `send_many` command**
    
    ```bash
    python3 send_many.py 10.0.0.1 10
    ```
    To send 10 messages with random lengths
-5. Type `exit` to leave each XTerm and the Mininet command line.
+6. Type `exit` to leave each XTerm and the Mininet command line.
 
-The message was not received because the tables in s1 are not populated yet.
-You will now write a Python program that will insert and modify entries into
-s1's tables.
+The message was not received because the ingress tables in s1 are not populated yet.
+You will now finish the `balance_controller.py` program toinsert and modify entries into
+s1's ingress tables.
 
 ## Step 3: Implement Control for Load Balancing
 

@@ -37,6 +37,7 @@ BALANCER_OUTGOING_DESTINATIONS = [
 ]
 
 def writeEcmpGroupValues(p4info_helper, sw):
+    print("TODO: writeEcmpGroupValues")
     # TODO 
     # 1) Build a valid table entry for the ecmp_group table
     # and install it on the switch. 
@@ -47,6 +48,7 @@ def writeEcmpGroupValues(p4info_helper, sw):
     # exercise again
 
 def writeEcmpNextHopRules(p4info_helper, sw, entry_amounts, update_type=p4runtime_lib.helper.P4InfoHelper.UpdateType.INSERT):
+    print("TODO: writeEcmpNextHopRules")
     # TODO 
     # 2) Build the table entries for the next_hop table
     # and install them on the switch. 
