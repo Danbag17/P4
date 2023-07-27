@@ -64,40 +64,29 @@ Your job will be to do the following:
      in a triangle, each connected to one host (`h1`, `h2`, and `h3`).
    * The hosts are assigned IPs of `10.0.1.1`, `10.0.2.2`, and `10.0.3.3`.
 
-2. You should now see a Mininet command prompt. Open two terminals for `h1` and
-`h2`, respectively: 
-  ```bash
-  mininet> xterm h1 h2
-  ```
-3. Each host includes a small Python-based messaging client and server. In
-`h2`'s xterm, start the server: 
-  ```bash 
-  python3 receive.py
-  ```
-4. First we will test without tunneling. In `h1`'s xterm, send a message to
-`h2`: 
-  ```bash
-  python3 send.py 10.0.2.2 "P4 is cool"
-  ```
-  The packet should be received at `h2`. If you examine the received packet 
-  you should see that is consists of an Ethernet header, an IP header, a TCP
-  header, and the message. If you change the destination IP address (e.g. try
-  to send to `10.0.3.3`) then the message should not be received by `h2`, and
-  will instead be received by `h3`.
+2. You should now see a Mininet command prompt. Open two terminals for `h1` and `h2`, respectively: 
+    ```bash
+    mininet> xterm h1 h2
+    ```
+3. Each host includes a small Python-based messaging client and server. In `h2`'s xterm, start the server: 
+    ```bash 
+    python3 receive.py
+    ```
+4. First we will test without tunneling. In `h1`'s xterm, send a message to `h2`: 
+    ```bash
+    python3 send.py 10.0.2.2 "P4 is cool"
+    ```
+    The packet should be received at `h2`. If you examine the received packet you should see that is consists of an Ethernet header, an IP header, a TCP header, and the message. If you change the destination IP address (e.g. try to send to `10.0.3.3`) then the message should not be received by `h2`, and will instead be received by `h3`.
 5. Now we test with tunneling. In `h1`'s xterm, send a message to `h2`: 
-  ```bash
-  python3 send.py 10.0.2.2 "P4 is cool" --dst_id 2
-  ```
-  The packet should be received at `h2`. If you examine the received packet you
-  should see that is consists of an Ethernet header, a tunnel header, an IP header,
-  a TCP header, and the message. 
+    ```bash
+    python3 send.py 10.0.2.2 "P4 is cool" --dst_id 2
+    ```
+    The packet should be received at `h2`. If you examine the received packet you should see that is consists of an Ethernet header, a tunnel header, an IP header, a TCP header, and the message.
 6. In `h1`'s xterm, send a message: 
-  ```bash
-  python3 send.py 10.0.3.3 "P4 is cool" --dst_id 2
-  ```
-  The packet should be received at `h2`, even though that IP address is the address
-  of `h3`. This is because the switch is no longer using the IP header for routing
-  when the `MyTunnel` header is in the packet. 
+    ```bash
+    python3 send.py 10.0.3.3 "P4 is cool" --dst_id 2
+    ```
+    The packet should be received at `h2`, even though that IP address is the address of `h3`. This is because the switch is no longer using the IP header for routing when the `MyTunnel` header is in the packet. 
 7. Type `exit` or `Ctrl-D` to leave each xterm and the Mininet command line.
 
 > Python Scapy does not natively support the `myTunnel` header type so we have
