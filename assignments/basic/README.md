@@ -30,7 +30,7 @@ fields. We encourage you to take a look at it.
 
 ## Step 1: Run the (incomplete) starter code
 
-Your job will be is to extend the [base code](../base_code) skeleton program to properly forward IPv4 packets. Keep in mind that assignments follow an evolutionary approach, so you'll need to reuse the `basic.p4` for the next assignment.
+Your job is to extend the [base code](../base_code) skeleton program to properly forward IPv4 packets. Keep in mind that assignments follow an evolutionary approach, so you'll need to reuse the `basic.p4` for the next assignment.
 
 Before that, let's compile the incomplete `basic.p4` and bring up a switch in Mininet to test its behavior.
 
