@@ -2,16 +2,11 @@
 
 ## Introduction
 
-In this exercise, we will be using P4Runtime to send flow entries to the 
-switch instead of using the switch's CLI. We will be building on the same P4
-program that you used in the [basic_tunnel](../basic_tunnel) exercise. As in the Tunnel assignment, you can simply copy and paste your `basic.p4` code in this folder, assuming it's working.
-You will use the starter program, `mycontroller.py` to create the table entries necessary to tunnel traffic between host 1 and 2.
+In this exercise, we will be using P4Runtime to send flow entries to the switch instead of using the switch's CLI. We will be building on the same P4 program that you used in the [basic_tunnel](../basic_tunnel) exercise. As in the Tunnel assignment, you can simply copy and paste your `basic.p4` code in this folder, assuming it's working. You will use the starter program, `mycontroller.py` to create the table entries necessary to tunnel traffic between host 1 and 2.
 
 ## Step 1: Run the (incomplete) starter code
 
-The starter code for this assignment is the `mycontroller.py` file, and it will install only some of the rules that you need to tunnel traffic between
-two hosts.
-Let's first compile the new P4 program, start the network, use `mycontroller.py` to install a few rules.
+The starter code for this assignment is the `mycontroller.py` file, and it will install only some of the rules that you need to tunnel traffic between two hosts. Let's first compile the new P4 program, start the network, use `mycontroller.py` to install a few rules.
 
 1. In your shell, run:
    ```bash
@@ -29,7 +24,7 @@ Let's first compile the new P4 program, start the network, use `mycontroller.py`
    ```
    Because there are no rules on the switches, you should **not** receive any
    replies yet. You should leave the ping running in this shell.
-   
+
 3. Open another shell and run the starter code:
    ```bash
    cd ~/p4labs/assignments/p4runtime
@@ -40,8 +35,7 @@ Let's first compile the new P4 program, start the network, use `mycontroller.py`
 
 4. Press `Ctrl-C` to the second shell to stop `mycontroller.py`
 
-Each switch is currently mapping traffic into tunnels based on the destination IP
-address. Your job is to write the rules that forward the traffic between the switches
+Each switch is currently mapping traffic into tunnels based on the destination IP address. Your job is to write the rules that forward the traffic between the switches
 based on the tunnel ID.
 
 ## Step 2: Implement the rules and counters
@@ -53,7 +47,7 @@ based on the tunnel ID.
    1. Set the valid bit on the `myTunnel` packet header.
    2. Set the `dst_id`, `proto_id` and `etherType` of the tunnel header.
    3. Increment the `ingressTunnelCounter` of the `dst_id` tunnel header index. Cast the index type to `bit<32>`.
-5. On ingress, implement an action called `myTunnel_egress`, the action must receive two parameters in the following order: first a parameter called `dst_Addr` with our mac address type defined on the code, second a parameter called `port`  with our egress type also defined on the code. The action must do the following:
+5. On ingress, implement an action called `myTunnel_egress`, the action must receive two parameters in the following order: first a parameter called `dstAddr` with our mac address type defined on the code, second a parameter called `port`  with our egress type also defined on the code. The action must do the following:
    1. Set the value of `egress_spec` attribute of the `standard_metadata` to `port`.
    2. Set the `dstAddr` and `etherType` of the ethernet header to `dstAddr` and the tunnel's `proto_id`, respectively.
    3. Set the invalid bit on the `myTunnel` packet header.
@@ -73,7 +67,7 @@ based on the tunnel ID.
    ```
    Because there are no rules on the switches, you should **not** receive any
    replies yet. You should leave the ping running in this shell.
-   
+
 3. Open another shell and run the python code:
    ```bash
    cd ~/p4labs/assignments/p4runtime
@@ -93,4 +87,3 @@ make clean
 
 Congratulations, your implementation works! Move onto the next assignment
 [firewall.](../firewall)
-
