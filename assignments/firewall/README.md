@@ -108,11 +108,11 @@ We will use a bloom filter with two hash functions to check if a packet coming i
 4. Lastly in the parser, implement a tcp state called `tcp`, extract the `hdr.tcp` from the packet and accept the transition.
 5. In the Ingress, you will see that registers and other parameters for the bloom filter are already in place as well as a `compute_hashes` action and a `check_ports` table.
 6. Implement the `ipv4_forward` action. If your `basic.p4` is working you can simply reuse it.
-7. Add an action called `set_direction` that receives a 1 bit argument called `dir`. This action must simply add the value of dir to `direction`.
+7. Add an action called `set_direction` that receives a 1 bit argument called `dir`. This action must simply add the value of `dir` to `direction`.
 8. During `apply` inside ingress, you will have to implement the firewall logic. 
     1. You must verify if the IPv4 and TCP headers are valid, and then proceed to implement the actual firewall rules. 
     2. Start off verifying the packet's ports against the `check_ports` table using `check_ports.apply().hit`, as it sets the direction of the packet.
-    3. You will need to verify the `direction` of the packet(`0` for outbound and `1` for inbound) for building the logic, refer to Step 1 - item 2 about the expected behaviour.
+    3. You will need to verify the `direction` of the packet (`0` for outbound and `1` for inbound) for building the logic, refer to Step 1 - item 2 about the expected behaviour.
     4. You will need to compute the hashes for the bloom filter using the `compute_hashes` function.
     5. For managing allowed or blocking traffic you will have to write or read entries from `bloom_filter_1` and `bloom_filter_2`. For outbound connections (`direction == 0`), verify if it's the start of a new connection using `hdr.tcp.syn` (1 for new connections). PS: Use the provided registers as memory for writting and reading from the bloom filter table, for writting in the table use `bloom_filter.write(reg_pos, 1)` and for reading `bloom_filter.read(reg_val, reg_pos)`.
     6. Inbound traffic is only allowed if both entries to the bloom filter table are set.
