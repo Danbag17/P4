@@ -27,7 +27,7 @@ up a switch in Mininet to test its behavior.
    * start a Mininet instance with three switches (`s1`, `s2`, `s3`) configured
      in a triangle, each connected to one host (`h1`, `h2`, `h3`).
    * The hosts are assigned IPs of `10.0.1.1`, `10.0.2.2`, etc.
-   * We use the IP address 10.0.0.1 to indicate traffic that should be
+   * We use the IP address `10.0.0.1` to indicate traffic that should be
      load balanced between `h2` and `h3`.
 
 2. You should now see a Mininet command prompt.  Open three terminals
@@ -76,7 +76,7 @@ missing piece.
 A complete `load_balance.p4` will contain the following components:
 
 1. Header type definitions for Ethernet (`ethernet_t`) and IPv4 (`ipv4_t`).
-2. **TODO** Parsers for Ethernet and IPv4 that populate `ethernet_t` and `ipv4_t` fields.
+2. **TODO:** Parsers for Ethernet and IPv4 that populate `ethernet_t` and `ipv4_t` fields.
 3. An action to drop a packet, using `mark_to_drop()`.
 4. **TODO:** An action (called `set_ecmp_select`), which will:
 	1. Hashes the 5-tuple specified above using the `hash` extern
