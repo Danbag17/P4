@@ -31,7 +31,7 @@ The code you wrote before should still compile in this slightly different setup.
    * start a Mininet instance with three switches (`s1`, `s2`, `s3`) configured
      in a triangle, each connected to one host (`h1`, `h2`, `h3`).
    * The hosts are assigned IPs of `10.0.1.1`, `10.0.2.2`, etc.
-   * We use the IP address 10.0.0.1 to indicate traffic that should be
+   * We use the IP address `10.0.0.1` to indicate traffic that should be
      load balanced between `h2` and `h3`.
    * install the rules from `s2-runtime.json` and `s3-runtime.json`
 2. Open another shell in this directory and run the starter code:
@@ -61,9 +61,7 @@ The code you wrote before should still compile in this slightly different setup.
    To send 10 messages with random lengths
 6. Type `exit` to leave each XTerm and the Mininet command line.
 
-The message was not received because the ingress tables in s1 are not populated yet.
-You will now finish the `balance_controller.py` program toinsert and modify entries into
-s1's ingress tables.
+The message was not received because the ingress tables in s1 are not populated yet. You will now finish the `balance_controller.py` program to insert and modify entries into s1's ingress tables.
 
 ## Step 3: Implement Control for Load Balancing
 
@@ -73,7 +71,7 @@ The `load_balance.p4` program needs to be extended with 2 features:
    Each counter corresponds to one of the two outgoing links. Each should count 
    the number of bytes (number of packets as in p4runtime is not needed) going 
    over that link. 
-2. Add a 32 bit parameter to the set_nhop action called link_index which 
+2. Add a 32 bit parameter to the `set_nhop` action called `link_index` which 
    indicates which link the packet should be sent over. Use this to increment 
    the counter corresponding to this link
 
@@ -87,8 +85,7 @@ A complete `balance_controller.py` will contain the following components:
 1. **TODO** A function that writes the ecmp group values called `writeEcmpGroupValues`
 2. **TODO** A function that writes the next hop rules called `writeEcmpNextHopRules`. 
    This function will:
-   1. Create a total of NHOP_TABLE_ENTRIES (default 100) table entries, divided over 
-      the two links according to the provided division in `entry_amounts`
+   1. Create a total of `NHOP_TABLE_ENTRIES` (default 100) table entries, divided over the two links according to the provided division in `entry_amounts`
    2. Write the table entries to the switch using the provided `update_type`. 
       This is because we need to specify that we are doing a `MODIFY` operation 
       when changing the table entries instead of inserting them.
@@ -105,9 +102,9 @@ A complete `balance_controller.py` will contain the following components:
    the function `writeEcmpNextHopRules` to set the initial entries.
 9. The main function that:
    1. Sets up the helper and switch
-   2. **TODO** Every 2 seconds reads out the 2 counters and computes the new entry_amounts
-   3. **TODO** Use the new entry_amounts write the new ECMP next hop rules
-   4. **TODO** Prints the load counter and entry_amounts
+   2. **TODO** Every 2 seconds reads out the 2 counters and computes the new `entry_amounts`
+   3. **TODO** Use the new `entry_amounts` write the new ECMP next hop rules
+   4. **TODO** Prints the load counter and `entry_amounts`
 10. Some code that parses the command line arguments and does input validation
 
 
