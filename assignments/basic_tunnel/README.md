@@ -43,7 +43,7 @@ header as well as perform normal IP forwarding if the encapsulation header does 
 Your job will be to do the following:
 
 1. Properly add a new header type called `myTunnel_t` that contains two 16-bit fields: `proto_id` and `dst_id`.
-2. Add the `ethertype` of the tunnel as a constant in your code. The type must be called `TYPE_MYTUNNEL` and it's value must be `0x1212`.
+2. Add the `etherType` of the tunnel as a constant in your code. The type must be called `TYPE_MYTUNNEL` and it's value must be `0x1212`.
 3. Update the parser to properly extract the packets according to their `etherType`.
 4. Define a new ingress action called `myTunnel_forward` that sets the egress port to the port number provided by the control plane (data provided by the control plane are created on runtime). The port number is an `egressSpec_t` argument received by the action.
 4. Define a new table on ingress called `myTunnel_exact` that defines that the destination id of the tunnel header must be `exact`. This table must invoke the tunnel forward and drop actions.
