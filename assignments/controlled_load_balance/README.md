@@ -1,24 +1,15 @@
 # Controlled Load Balancing
 
-In this exercise, you will adapt the previous Load Balancing exercise
-to let the control plane decide on the division of load over the 2 links.
-The control plan will decide on this based on the load as measured by the
-data plane. You will adapt the next-hop table so that it has 100 entries,
-and have the P4Runtime program modify the amount of entries pointing to 
-each link depending on the load reported by the switch. For this the
-switch will keep a counter for each link that P4Runtime can read.
+In this exercise, you will adapt the previous Load Balancing exercise to let the control plane decide on the division of load over the 2 links. The control plan will decide on this based on the load as measured by the data plane. You will adapt the next-hop table so that it has 100 entries, and have the P4Runtime program modify the amount of entries pointing to  each link depending on the load reported by the switch. For this, the switch will keep a counter for each link that P4Runtime can read.
 
-## Step 1: Copy your Load Balance and Basic solution
+## Step 0: Copy your Load Balance and Basic solutions
 
-Copy your `load_balance.p4` from the previous Load Balance exercise into this directory. 
-Make sure it is still called `load_balance.p4`. Also copy your `basic.p4` from e.g. the
-firewall or basic assignment into this directory. 
+Copy your `load_balance.p4` from the previous Load Balance exercise into this directory. Make sure it is still called `load_balance.p4`. Also copy your `basic.p4` from e.g. the firewall or basic assignment into this directory. 
 
-s1 will be the load balancing switch, redirecting to either s2 or s3, who will run `basic.p4`
-to perform the basic ipv4 forwarding. You will not be interacting with s2 or s3 from P4Runtime.
+`s1` will be the load balancing switch, redirecting to either `s2` or `s3`, which will run `basic.p4` to perform the basic IPv4 forwarding. You will not be interacting with `s2` or `s3` from P4Runtime.
 
 
-## Step 2: Run your (incomplete) code
+## Step 1: Run your (incomplete) code
 
 The code you wrote before should still compile in this slightly different setup.
 
@@ -58,22 +49,17 @@ The code you wrote before should still compile in this slightly different setup.
    ```bash
    python3 send_many.py 10.0.0.1 10
    ```
-   To send 10 messages with random lengths
+   This will send 10 messages with random lengths.
 6. Type `exit` to leave each XTerm and the Mininet command line.
 
-The message was not received because the ingress tables in s1 are not populated yet. You will now finish the `balance_controller.py` program to insert and modify entries into s1's ingress tables.
+The message was not received because the ingress tables in `s1` are not populated yet. You will now finish the `balance_controller.py` program to insert and modify entries into `s1`'s ingress tables.
 
-## Step 3: Implement Control for Load Balancing
+## Step 2: Implement Control for Load Balancing
 
 The `load_balance.p4` program needs to be extended with 2 features:
 
-1. Add 2 counters. In the p4runtime exercise you have learned how to make these. 
-   Each counter corresponds to one of the two outgoing links. Each should count 
-   the number of bytes (number of packets as in p4runtime is not needed) going 
-   over that link. 
-2. Add a 32 bit parameter to the `set_nhop` action called `link_index` which 
-   indicates which link the packet should be sent over. Use this to increment 
-   the counter corresponding to this link
+1. Add 2 counters. In the p4runtime exercise you have learned how to make these. Each counter corresponds to one of the two outgoing links. Each should count the number of bytes (number of packets as in p4runtime is not needed) going over that link.
+2. Add a 32-bit parameter to the `set_nhop` action called `link_index` which indicates which link the packet should be sent over. Use this to increment the counter corresponding to this link.
 
 The `balance_controller.py` file contains a skeleton P4Runtime program with key
 pieces of logic replaced by `TODO` comments. These should guide your
