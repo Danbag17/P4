@@ -21,12 +21,7 @@ The firewall on s1 should have the following functionality:
   established from either h1 or h2, but cannot initiate new
   connections to hosts on the internal network.
 
-Our P4 program will be written for the V1Model architecture implemented
-on P4.org's bmv2 software switch. The architecture file for the V1Model
-can be found at: /usr/local/share/p4c/p4include/v1model.p4. This file
-desribes the interfaces of the P4 programmable elements in the architecture,
-the supported externs, as well as the architecture's standard metadata
-fields. We encourage you to take a look at it.
+Our P4 program will be written for the V1Model architecture implemented on P4.org's bmv2 software switch. The architecture file for the V1Model can be found at: `/usr/share/p4c/p4include/v1model.p4`. This file desribes the interfaces of the P4 programmable elements in the architecture, the supported externs, as well as the architecture's standard metadata fields. We encourage you to take a look at it.
 
 ## Step 1: Run the (incomplete) starter code
 
@@ -104,8 +99,8 @@ We will use a bloom filter with two hash functions to check if a packet coming i
 
 1. The definitions for the bloom filter and the TCP metadata are already defined in `firewall.p4`.
 2. Parsers for Ethernet, IPv4 and TCP that populate `ethernet_t`, `ipv4_t` and `tcp_t` fields. You can reuse the code from `basic.p4` assuming it's working.
-3. While parsing IPv4 packets, change the transition from `accept` to `select`, the transition must receive the `hdr.ipv4.protocol` as parameter. During the transition, add the rules of `TYPE_TCP: tcp` and set `default` as accept.
-4. Lastly in the parser, implement a tcp state called `tcp`, extract the `hdr.tcp` from the packet and accept the transition.
+    1. While parsing IPv4 packets, change the transition from `accept` to `select`, the transition must receive the `hdr.ipv4.protocol` as parameter. During the transition, add the rules of `TYPE_TCP: tcp` and set `default` as accept.
+    2. Lastly in the parser, implement a tcp state called `tcp`, extract the `hdr.tcp` from the packet and accept the transition.
 5. In the Ingress, you will see that registers and other parameters for the bloom filter are already in place as well as a `compute_hashes` action and a `check_ports` table.
 6. Implement the `ipv4_forward` action. If your `basic.p4` is working you can simply reuse it.
 7. Add an action called `set_direction` that receives a 1 bit argument called `dir`. This action must simply add the value of `dir` to `direction`.
