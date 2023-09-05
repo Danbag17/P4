@@ -73,7 +73,7 @@ up a switch in Mininet to test its behavior.
    ```bash
    make stop
    ```
-   And to delete all pcaps, build files, and logs:
+    Or, if you want to both stop mininet and delete all pcaps, build files, and logs:
    ```bash
    make clean
    ```

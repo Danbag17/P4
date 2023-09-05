@@ -56,7 +56,7 @@ Before that, let's compile the incomplete `basic.p4` and bring up a switch in Mi
    ```bash
    make stop
    ```
-   And to delete all pcaps, build files, and logs:
+   Or, if you want to both stop mininet and delete all pcaps, build files, and logs:
    ```bash
    make clean
    ```
