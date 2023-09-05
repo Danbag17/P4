@@ -50,7 +50,7 @@ based on the tunnel ID.
 5. On ingress, implement an action called `myTunnel_egress`, the action must receive two parameters in the following order: first a parameter called `dstAddr` with our MAC address type defined on the code, second a parameter called `port`  with our egress type also defined on the code. The action must do the following:
    1. Set the value of `egress_spec` attribute of the `standard_metadata` to `port`.
    2. Set the `dstAddr` and `etherType` of the ethernet header to `dstAddr` and the tunnel's `proto_id`, respectively.
-   3. Set the invalid bit on the `myTunnel` packet header.
+   3. Set the validity bit on the `myTunnel` packet header as **invalid**.
    4. Increment the `egressTunnelCounter` of the `dst_id` tunnel header index. Cast the index type to `bit<32>`.
 6. Add the implemented actions on `4` and `5` to the `ipv4_lpm` and `myTunnel_exact` tables.
 
