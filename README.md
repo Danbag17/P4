@@ -28,11 +28,11 @@ The description of each assignment is in it's respective folder.
 
 ## Resources
 
-Presentation slides are available [online](https://courses.sidnlabs.nl/anet-2022/) and alternative slides from p4.org are available in the P4_tutorial.pdf in this repository. A P4 Cheat Sheet is also available in this repository. This contains various examples that you can use. If you use code from any of these places, or from other places on the internet, please indicate so with a comment.
+Presentation slides are available [online](https://courses.sidnlabs.nl/anet-2023/) and alternative slides from p4.org are available in the P4_tutorial.pdf in this repository. A P4 Cheat Sheet is also available in this repository. This contains various examples that you can use. If you use code from any of these places, or from other places on the internet, please indicate so with a comment.
 
 ## Obtaining required software
 
-You can find the VM on the canvas files page: https://canvas.utwente.nl/files/3204263/download?download_frd=1
+You can find the VM on the Canvas Files page: https://canvas.utwente.nl/courses/13594/files
 
 Use the VM as follows:
 
@@ -49,6 +49,5 @@ Use the VM as follows:
     * Write the code on your own computer and copy it using `scp` over an ssh connection.
       The virtual machine should be listening for ssh connections on `localhost:2222`
 8. Use proper git practices and commit your code often so that you can pull any further updates of the exercises
-
 
 The account is `p4` and the password is `p4`.
