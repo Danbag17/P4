@@ -83,7 +83,7 @@ A complete `balance_controller.py` will contain the following components:
 6. A function to print information of an GRPC error (communication protocol)
    called `printGrpcError`
 7. A function to obtain the byte count of a counter on a switch called `getByteCounter`
-8. **TODO** (needs finishing) A function that sets up the connection with the balancing 
+8. **TODO** A function that sets up the connection with the balancing 
    switch and install the initial rules called `setupBalancingSwitch`. You should call 
    the function `writeEcmpNextHopRules` to set the initial entries.
 9. The main function that:

@@ -114,8 +114,6 @@ def readTableRules(p4info_helper, sw):
     for response in sw.ReadTableEntries():
         for entity in response.entities:
             entry = entity.table_entry
-            # TODO For extra credit, you can use the p4info_helper to translate
-            #      the IDs in the entry to names
             table_name = p4info_helper.get_tables_name(entry.table_id)
             print('%s: ' % table_name, end=' ')
             for m in entry.match:
