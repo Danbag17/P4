@@ -75,13 +75,13 @@ missing piece.
 
 A complete `load_balance.p4` will contain the following components:
 
-1. Header type definitions for Ethernet (`ethernet_t`) and IPv4 (`ipv4_t`).
-2. **TODO:** Parsers for Ethernet and IPv4 that populate `ethernet_t` and `ipv4_t` fields.
+1. Header type definitions for Ethernet (`ethernet_t`), IPv4 (`ipv4_t`), and UDP (`udp_t`).
+2. **TODO:** Parsers for Ethernet, IPv4 and UDP that populate `ethernet_t`, `ipv4_t`, and `udp_t` fields.
 3. An action to drop a packet, using `mark_to_drop()`.
-4. **TODO:** An action (called `set_ecmp_select`), which will:
+4. **TODO:** An action (called `set_ecmp_select`), which:
 	1. Hashes the 5-tuple specified above using the `hash` extern
 	2. Stores the result in the `meta.ecmp_select` field
-5. **TODO:** A control that:
+5. **TODO:** Control flow that:
     1. Applies the `ecmp_group` table.
     2. Applies the `ecmp_nhop` table.
 6. A deparser that selects the order in which fields inserted into the outgoing
@@ -128,7 +128,7 @@ mn -c
 
 ## Next Steps
 
-Congratulations, your implementation works! If availabe, you can move on to the [controlled_load_balance](../controlled_load_balance) exercise.
+Congratulations, your implementation works! If availabe, you can move on to the [Controlled Load Balance](../controlled_load_balance) exercise.
 
 ## Relevant Documentation
 
