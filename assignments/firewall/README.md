@@ -21,7 +21,16 @@ The firewall on `s1` should have the following functionality:
 
 Our P4 program will be written for the V1Model architecture implemented on P4.org's bmv2 software switch. The architecture file for the V1Model can be found at: `/usr/share/p4c/p4include/v1model.p4`. This file desribes the interfaces of the P4 programmable elements in the architecture, the supported externs, as well as the architecture's standard metadata fields. We encourage you to take a look at it.
 
-## Step 1: Run the (incomplete) starter code
+## Step 0: Setup switches without the firewall
+
+We will first setup the switches with some basic forwarding functionality before implementing the firewall.
+
+1. Copy the `basic.p4` code from [Basic Forwarding](../basic) to this directory if you have not already done so.
+2. Copy the parser from `basic.p4` to `firewall.p4`
+3. Copy the action `ipv4_forward()` from `basic.p4` to `firewall.p4`
+4. Apply the `check_ports` table by simply calling `check_ports.apply()`. Later on, you will have to work this call into the firewall code.
+
+## Step 1: Run without the firewall
 
 The directory with this README also contains a skeleton P4 program, `firewall.p4`. Your job will be to extend this skeleton program to properly implement the firewall.
 
