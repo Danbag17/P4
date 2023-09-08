@@ -1,6 +1,6 @@
 # Controlled Load Balancing
 
-In this exercise, you will adapt the previous Load Balancing exercise to let the control plane decide on the division of load over the 2 links. The control plan will decide on this based on the load as measured by the data plane. You will adapt the next-hop table so that it has 100 entries, and have the P4Runtime program modify the amount of entries pointing to  each link depending on the load reported by the switch. For this, the switch will keep a counter for each link that P4Runtime can read.
+In this exercise, you will adapt the previous Load Balancing exercise to let the control plane decide on the division of load over the 2 links. It will do so based on the load on each link as measured by the data plane. You will adapt the next-hop table so that it has 100 entries, and have the P4Runtime program modify the amount of entries pointing to  each link depending on the loads reported by the switch. For this, the switch will keep a counter for each link that P4Runtime can read.
 
 ## Step 0: Copy your Load Balance and Basic solutions
 
@@ -83,9 +83,7 @@ A complete `balance_controller.py` will contain the following components:
 6. A function to print information of an GRPC error (communication protocol)
    called `printGrpcError`
 7. A function to obtain the byte count of a counter on a switch called `getByteCounter`
-8. **TODO** A function that sets up the connection with the balancing 
-   switch and install the initial rules called `setupBalancingSwitch`. You should call 
-   the function `writeEcmpNextHopRules` to set the initial entries.
+8. **TODO** A function that sets up the connection with the balancing switch and installs the initial rules called `setupBalancingSwitch`. You should call the function `writeEcmpNextHopRules` to set the initial entries.
 9. The main function that:
    1. Sets up the helper and switch
    2. **TODO** Every 2 seconds reads out the 2 counters and computes the new `entry_amounts`
