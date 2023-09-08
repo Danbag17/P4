@@ -25,18 +25,12 @@ The starter code for this assignment is the `mycontroller.py` file, and it will 
    Because there are no rules on the switches, you should **not** receive any
    replies yet. You should leave the ping running in this shell.
 
-3. Open another shell and run the starter code:
+3. Open another shell and run the starter code for the control plane:
    ```bash
    cd ~/p4labs/assignments/p4runtime
    python3 mycontroller.py
    ```
-   This will install the `basic.p4` program on the switches and push the rules. Since there are no ingress rules yet, you should not see ingress data here.
-   If you run into permission denials and problems while running p4 code or python scripts, try running as `sudo` and/or `chmod` your files as required.
-
-4. Press `Ctrl-C` to the second shell to stop `mycontroller.py`
-
-Each switch is currently mapping traffic into tunnels based on the destination IP address. Your job is to write the rules that forward the traffic between the switches
-based on the tunnel ID.
+   This code does not run succesfully, because it tries to supply configurations to the data plane that the data plane does not accept yet. Specifically, it tries to populate the tables with actions that are not defined yet and it tries to read the amount of traffic that went trough the unnel. Your job is to extend the control plane and adapt the P4 program to it.
 
 ## Step 2: Implement the rules and counters
 
