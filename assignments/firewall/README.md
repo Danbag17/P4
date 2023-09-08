@@ -26,7 +26,7 @@ Our P4 program will be written for the V1Model architecture implemented on P4.or
 We will first setup the switches with some basic forwarding functionality before implementing the firewall.
 
 1. Copy the `basic.p4` code from [Basic Forwarding](../basic) to this directory if you have not already done so.
-2. Copy the parser from `basic.p4` to `firewall.p4`
+2. Copy the parser and deparser from `basic.p4` to `firewall.p4`
 3. Copy the action `ipv4_forward()` from `basic.p4` to `firewall.p4`
 4. Apply the `check_ports` table by simply calling `check_ports.apply()`. Later on, you will have to work this call into the firewall code.
 
@@ -106,14 +106,13 @@ We will use a bloom filter with two hash functions to check if a packet coming i
     1. While parsing IPv4 packets, change the transition from `accept` to `select`, the transition must receive the `hdr.ipv4.protocol` as parameter. During the transition, add the rules of `TYPE_TCP: tcp` and set `default` as accept.
     2. Lastly in the parser, implement a tcp state called `tcp`, extract the `hdr.tcp` from the packet and accept the transition.
 5. In the Ingress, you will see that registers and other parameters for the bloom filter are already in place as well as a `compute_hashes` action and a `check_ports` table.
-6. Implement the `ipv4_forward` action. If your `basic.p4` is working you can simply reuse it.
-7. Add an action called `set_direction` that receives a 1 bit argument called `dir`. This action must simply add the value of `dir` to `direction`.
+7. Implement the `set_direction` action. This action must simply add the value of `dir` to `direction`.
 8. During `apply` inside ingress, you will have to implement the firewall logic. 
     1. You must verify if the IPv4 and TCP headers are valid, and then proceed to implement the actual firewall rules. 
-    2. Start off verifying the packet's ports against the `check_ports` table using `check_ports.apply().hit`, as it sets the direction of the packet.
+    2. Start off verifying the packet's ports against the `check_ports` table using `check_ports.apply().hit`, as it sets the direction of the packet. This replaces the `check_ports.apply()` call you added in [Step 0](##Step-0:-Setup-switches-without-the-firewall).
     3. You will need to verify the `direction` of the packet (`0` for outbound and `1` for inbound) for building the logic, refer to Step 1 - item 2 about the expected behaviour.
     4. You will need to compute the hashes for the bloom filter using the `compute_hashes` function.
-    5. For managing allowed or blocking traffic you will have to write or read entries from `bloom_filter_1` and `bloom_filter_2`. For outbound connections (`direction == 0`), verify if it's the start of a new connection using `hdr.tcp.syn` (1 for new connections). PS: Use the provided registers as memory for writting and reading from the bloom filter table, for writting in the table use `bloom_filter.write(reg_pos, 1)` and for reading `bloom_filter.read(reg_val, reg_pos)`.
+    5. For managing allowed or blocking traffic you will have to write or read entries from `bloom_filter_1` and `bloom_filter_2`. For outbound connections (`direction == 0`), verify if it's the start of a new connection using `hdr.tcp.syn` (`1` for new connections). PS: Use the provided registers as memory for writting and reading from the bloom filter table, for writting in the table use `bloom_filter.write(reg_pos, 1)` and for reading `bloom_filter.read(reg_val, reg_pos)`.
     6. Inbound traffic is only allowed if both entries to the bloom filter table are set.
 9. Properly adapt the deparser.
 
