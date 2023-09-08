@@ -2,35 +2,30 @@
 
 ## Introduction
 
-The objective of this exercise is to write a P4 program that
-implements a simple stateful firewall. To do this, we will use
-a bloom filter. You will need two different `p4` codes in this assignment, one is the code from the [Basic Forwarding](../basic) assignment which you should place in this folder named as `basic.p4` (assuming you finished the Basic Forwarding assignment and your solution works) and the other one is the `firewall.p4` which is a skeleton is provided in this assignment and you must implement it.
+The objective of this exercise is to write a P4 program that implements a simple stateful firewall. To do this, we will use a bloom filter. You will need two different `.p4` files in this assignment. One is the code from the [Basic Forwarding](../basic) assignment which you should place in this folder named as `basic.p4` (assuming you finished the Basic Forwarding assignment and your solution works) and the other one is the `firewall.p4` which is a skeleton is provided in this assignment and you must implement it.
 
 We will use the pod-topology for this exercise, which consists of four hosts connected to four switches, which are wired up as they would be in a single pod of a fat tree topology.
 
 ![topology](./firewall-topo.png)
 
-Switch s1 will be configured with our (`firewall.p4`) code, and the rest of the switches will run the basic router program (`basic.p4`).
+Switch `s1` will be configured with our (`firewall.p4`) code, and the rest of the switches will run the basic router program (`basic.p4`).
 
-The firewall on s1 should have the following functionality:
-* Hosts h1 and h2 are on the internal network and can always
+The firewall on `s1` should have the following functionality:
+* Hosts `h1` and `h2` are on the internal network and can always
   connect to one another.
-* Hosts h1 and h2 can freely connect to h3 and h4 on the
+* Hosts `h1` and `h2` can freely connect to `h3` and `h4` on the
   external network.
-* Hosts h3 and h4 can only reply to connections once they have been
-  established from either h1 or h2, but cannot initiate new
+* Hosts `h3` and `h4` can only reply to connections once they have been
+  established from either `h1` or `h2`, but cannot initiate new
   connections to hosts on the internal network.
 
 Our P4 program will be written for the V1Model architecture implemented on P4.org's bmv2 software switch. The architecture file for the V1Model can be found at: `/usr/share/p4c/p4include/v1model.p4`. This file desribes the interfaces of the P4 programmable elements in the architecture, the supported externs, as well as the architecture's standard metadata fields. We encourage you to take a look at it.
 
 ## Step 1: Run the (incomplete) starter code
 
-The directory with this README also contains a skeleton P4 program,
-`firewall.p4`. Your job will be to extend this skeleton program to
-properly implement the firewall.
+The directory with this README also contains a skeleton P4 program, `firewall.p4`. Your job will be to extend this skeleton program to properly implement the firewall.
 
-Before that, let's compile the incomplete `firewall.p4` and bring
-up a switch in Mininet to test its behavior.
+Before that, let's compile the incomplete `firewall.p4` and bring up a switch in Mininet to test its behavior.
 
 1. In your shell, run:
    ```bash
@@ -116,7 +111,7 @@ We will use a bloom filter with two hash functions to check if a packet coming i
 ## Step 3: Run your solution
 
 Follow the instructions from Step 1. This time, the `iperf` flow between
-h3 and h1 should be blocked by the firewall.
+`h3` and `h1` should be blocked by the firewall.
 
 ### Troubleshooting
 
