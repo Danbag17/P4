@@ -186,19 +186,19 @@ control MyIngress(inout headers hdr,
         if(tcp_is_valid(packet)):
             if(packet_ports_must_be_filtered(packet)):
                 packet_flow = direction
-                //first i need the hashes to query my filter tables
+                //first I need the hashes to query my filter tables
                 if(is_outbound(packet_flow)):
                     compute_hashes(src, dst, srcport, dstport)
                 else:
                     compute_hashes(dst, src, dstport, srcport)
-                //now that i have the hashes, i can query and take action
+                //now that I have the hashes, I can query and take action
                 if(is_outbound(packet_flow)):
-                    //its an inbound connection, so i allow everything and must be able to receive the responses
-                    //to receive the responses i have to write to the filters, because otherwise it will be blocked
+                    //its an outbound connection, so I allow everything and must be able to receive the responses
+                    //to receive the responses I have to write to the filters, because otherwise it will be blocked
                     if(is_new_connection(hdr.tcp.syn)):
                         write_to_filters(reg_pos_one, reg_pos_two, 1)
                 else:
-                    //its an outbound connection, so i block everything
+                    //its an inbound connection, so I block everything
                     //unless both entries to the filters are set as 1
                     read_from_filters(read_val_one, reg_pos_one, read_val_two, reg_pos_two)
                     if((read_val_one OR read_val_two) != 1):
