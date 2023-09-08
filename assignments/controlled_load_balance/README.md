@@ -71,7 +71,7 @@ A complete `balance_controller.py` will contain the following components:
 1. **TODO** A function that writes the ecmp group values called `writeEcmpGroupValues`
 2. **TODO** A function that writes the next hop rules called `writeEcmpNextHopRules`. 
    This function will:
-   1. Create a total of `NHOP_TABLE_ENTRIES` (default 100) table entries, divided over the two links according to the provided division in `entry_amounts`
+   1. Create a total of `NHOP_TABLE_ENTRIES` table entries (default 100). There should be an entry for each value that the key can have. Each entry has to point to one of the links. The division of links should be according to `entry_amounts`.
    2. Write the table entries to the switch using the provided `update_type`. 
       This is because we need to specify that we are doing a `MODIFY` operation 
       when changing the table entries instead of inserting them.
