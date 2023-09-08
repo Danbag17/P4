@@ -32,9 +32,7 @@ We will first setup the switches with some basic forwarding functionality before
 
 ## Step 1: Run without the firewall
 
-The directory with this README also contains a skeleton P4 program, `firewall.p4`. Your job will be to extend this skeleton program to properly implement the firewall.
-
-Before that, let's compile the incomplete `firewall.p4` and bring up a switch in Mininet to test its behavior.
+Let's compile the incomplete `firewall.p4` and bring up a switch in Mininet to test its behavior.
 
 1. In your shell, run:
    ```bash
