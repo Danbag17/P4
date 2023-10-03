@@ -104,7 +104,7 @@ We will use a bloom filter with two hash functions to check if a packet coming i
     1. While parsing IPv4 packets, change the transition from `accept` to `select`, the transition must receive the `hdr.ipv4.protocol` as parameter. During the transition, add the rules of `TYPE_TCP: tcp` and set `default` as accept.
     2. Lastly in the parser, implement a tcp state called `tcp`, extract the `hdr.tcp` from the packet and accept the transition.
 5. In the Ingress, you will see that registers and other parameters for the bloom filter are already in place as well as a `compute_hashes` action and a `check_ports` table.
-7. Implement the `set_direction` action. This action must simply add the value of `dir` to `direction`.
+7. Implement the `set_direction` action. This action must simply set `direction` to the value provided by the control plane.
 8. During `apply` inside ingress, you will have to implement the firewall logic. 
     1. You must verify if the IPv4 and TCP headers are valid, and then proceed to implement the actual firewall rules. 
     2. Start off verifying the packet's ports against the `check_ports` table using `check_ports.apply().hit`, as it sets the direction of the packet. This replaces the `check_ports.apply()` call you added in [Step 0](##Step-0:-Setup-switches-without-the-firewall).
