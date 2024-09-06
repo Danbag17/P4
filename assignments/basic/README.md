@@ -101,8 +101,7 @@ Summarizing, your implementation must do the following:
 	2. Updates the ethernet destination address with the address of the next hop. 
 	3. Updates the ethernet source address with the address of the switch. 
 	4. Decrements the TTL.
-3. Verify if the IPv4 header is valid before applying Ingress changes.
-4. A deparser that selects the order in which fields are inserted into the outgoing packet.
+3. A deparser that selects the order in which fields are inserted into the outgoing packet.
 
 ## Step 3: Run your solution
 
