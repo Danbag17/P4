@@ -56,6 +56,7 @@ Use the VM as follows:
       move the code to the VM
     * Write the code on your own computer and copy it using `scp` over an ssh connection.
       The virtual machine should be listening for ssh connections on `localhost:2222`
+    * Use Visual Studio Code that connects with the VM in background where you write code in your host machine.
 8. Use proper git practices and commit your code often so that you can pull any further updates of the exercises
 
 The account is `p4` and the password is `p4`.
