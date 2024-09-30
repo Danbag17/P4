@@ -40,7 +40,8 @@ The starter code for this assignment is the `mycontroller.py` file, and it will 
 4. On ingress, implement an action called `myTunnel_ingress`, the action must receive a 16-bit parameter called `dst_id`. The action must do the following:
    1. Set the valid bit on the `myTunnel` packet header.
    2. Set the `dst_id` and `proto_id` of the tunnel header.
-   3. Increment the `ingressTunnelCounter` of the `dst_id` tunnel header index. Cast the index type to `bit<32>`.
+   3. Set the `etherType` to be 'myTunnel` type i.e. 0x1212. 
+   4. Increment the `ingressTunnelCounter` of the `dst_id` tunnel header index. Cast the index type to `bit<32>`.
 5. On ingress, implement an action called `myTunnel_egress`, the action must receive two parameters in the following order: first a parameter called `dstAddr` with our MAC address type defined on the code, second a parameter called `port`  with our egress type also defined on the code. The action must do the following:
    1. Set the value of `egress_spec` attribute of the `standard_metadata` to `port`.
    2. Set the `dstAddr` and `etherType` of the ethernet header to `dstAddr` and the tunnel's `proto_id`, respectively.
