@@ -28,7 +28,7 @@ The description of each assignment is in it's respective folder.
 
 ## Resources
 This repo contains:
-* slides from the introductory lecture (`P4_Lab_Slides_2025.pdf`)
+* slides from the introductory lecture (`P4_Lab_Slides_2026.pdf`)
 * alternative slides from [p4.org](https://p4.org/) (`P4_tutorial.pdf`)
 * a P4 Cheat Sheet containing various examples that you can use (`p4-cheat-sheet.pdf`)
 
