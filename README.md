@@ -40,7 +40,7 @@ If you use code from any of these places, or from other places on the internet, 
 
 ## Obtaining required software
 
-You can find the VM on the Canvas Files page: https://canvas.utwente.nl/courses/17504/files?preview=5073723
+You can find the VM on the Canvas Files page: https://canvas.utwente.nl/courses/19076/files?preview=5675187
 
 Use the VM as follows:
 
