@@ -1,3 +1,25 @@
+# Práctica 4b: Balanceo de carga controlado
+
+## Solución implementada
+
+Archivos: [`load_balance.p4`](./load_balance.p4), [`basic.p4`](./basic.p4), [`balance_controller.py`](./balance_controller.py)
+
+**Plano de datos (`load_balance.p4`)**: el mismo ECMP de la práctica 4a, con dos cambios:
+- Un contador `enlace` de 2 posiciones (en bytes), uno por enlace de salida.
+- `set_nhop` recibe un parámetro `link_index` y cuenta cada paquete en el contador de su enlace.
+
+**Plano de control (`balance_controller.py`)**:
+1. Instala la regla de `ecmp_group` para `10.0.0.1/32` con base 1 y 100 entradas.
+2. Instala las reglas `send_frame` de salida (MAC de origen por puerto).
+3. Instala las 100 entradas de `ecmp_nhop` con un reparto inicial 50/50.
+4. Cada 2 segundos lee los contadores de bytes de los dos enlaces, recalcula el reparto con `balanceEntryAmounts` (más entradas al enlace menos cargado) y **modifica** las entradas de la tabla.
+
+**Ejecutar:** `make run` y, en otra terminal, `python3 balance_controller.py`. Después, `python3 receive.py` en `h2` y `h3`, y `python3 send_many.py 10.0.0.1 10` desde `h1`.
+
+---
+
+## Enunciado original
+
 # Controlled Load Balancing
 
 In this exercise, you will adapt the previous Load Balancing exercise to let the control plane decide on the division of load over the 2 links. It will do so based on the load on each link as measured by the data plane. You will adapt the next-hop table so that it has 100 entries, and have the P4Runtime program modify the amount of entries pointing to  each link depending on the loads reported by the switch. For this, the switch will keep a counter for each link that P4Runtime can read.

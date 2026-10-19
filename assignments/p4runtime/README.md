@@ -1,3 +1,28 @@
+# Práctica 2: Plano de control con P4Runtime
+
+## Solución implementada
+
+Archivos: [`basic.p4`](./basic.p4), [`mycontroller.py`](./mycontroller.py)
+
+**Plano de datos (`basic.p4`)**, a partir del túnel de la práctica 1b:
+- `myTunnel_ingress`: encapsula el paquete IP en la cabecera `myTunnel` con el `dst_id` indicado.
+- `myTunnel_forward`: reenvía por el túnel en los switches de tránsito.
+- `myTunnel_egress`: quita la cabecera del túnel y entrega el paquete al host.
+- Dos contadores (`ingressTunnelCounter`, `egressTunnelCounter`) que cuentan paquetes y bytes por túnel.
+
+**Plano de control (`mycontroller.py`)**: instala por P4Runtime las tres reglas de cada túnel (h1 → h2 y h2 → h1):
+1. Regla de entrada en el switch de origen (`ipv4_lpm` → `myTunnel_ingress`).
+2. Regla de tránsito en el switch de origen (`myTunnel_exact` → `myTunnel_forward` por `SWITCH_TO_SWITCH_PORT`).
+3. Regla de salida en el switch de destino (`myTunnel_exact` → `myTunnel_egress` por `SWITCH_TO_HOST_PORT`).
+
+Después lee e imprime los contadores de cada túnel cada 2 segundos.
+
+**Ejecutar:** `make run` y, en otra terminal, `python3 mycontroller.py`.
+
+---
+
+## Enunciado original
+
 # Implementing a Control Plane using P4Runtime
 
 ## Introduction

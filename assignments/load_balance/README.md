@@ -1,3 +1,22 @@
+# Práctica 4a: Balanceo de carga (ECMP)
+
+## Solución implementada
+
+Archivo: [`load_balance.p4`](./load_balance.p4)
+
+- **Acción `set_ecmp_select`**: calcula un hash CRC16 sobre la 5-tupla (IP origen, IP destino, protocolo, puerto UDP origen y puerto UDP destino) y lo guarda en `meta.ecmp_select`, dentro del rango `[ecmp_base, ecmp_base + ecmp_count)`.
+- **Tabla `ecmp_group`**: coincidencia LPM sobre la IP de destino (la IP virtual `10.0.0.1`) que lanza el cálculo del hash.
+- **Tabla `ecmp_nhop`**: coincidencia exacta sobre `ecmp_select` con la acción `set_nhop`, que reescribe la MAC y la IP de destino, fija el puerto y decrementa el TTL.
+- Ambas tablas solo se aplican si IPv4 y UDP son válidos y el TTL es mayor que 0.
+
+Resultado: cada flujo UDP enviado a `10.0.0.1` llega a `h2` o a `h3` según su hash.
+
+**Ejecutar:** `make run`, y en Mininet `xterm h1 h2 h3`. Después, `python3 receive.py` en `h2` y `h3`, y `python3 send.py 10.0.0.1 "hola"` desde `h1`.
+
+---
+
+## Enunciado original
+
 # Load Balancing
 
 In this exercise, you will implement a form of load balancing based on

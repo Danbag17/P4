@@ -1,62 +1,78 @@
-# P4 Lab
+# Laboratorio de P4: redes programables con BMv2 y Mininet
 
-## Introduction
+Soluciones a las prácticas del **P4 Lab** de la asignatura *Advanced Networking (ANET)* de la University of Twente (2026).
+Cada práctica programa el plano de datos de un switch en **P4₁₆** (arquitectura v1model) y, en las últimas, también el plano de control con **P4Runtime** en Python.
 
-Welcome to the ANET P4 Lab!
-In this repository you can find information about your upcoming assignments.
+![P4](https://img.shields.io/badge/lenguaje-P4%E2%82%81%E2%82%86-blue)
+![Python](https://img.shields.io/badge/control-Python%203-yellow)
+![BMv2](https://img.shields.io/badge/switch-BMv2-lightgrey)
+![Mininet](https://img.shields.io/badge/emulador-Mininet-green)
 
-We provide you with a [base code for starting your work](./base_code).
+## Prácticas
 
-## Assignments
+| # | Práctica | Qué hace | Archivos principales |
+|---|----------|----------|----------------------|
+| 1 | [Reenvío básico](./assignments/basic) | Router IPv4 con tabla LPM: reescribe las MAC, decrementa el TTL y elige el puerto de salida. | `basic.p4` |
+| 1 | [Túnel básico](./assignments/basic_tunnel) | Cabecera propia `myTunnel` (EtherType `0x1212`) que encamina por identificador de destino en vez de por IP. | `basic.p4` |
+| 2 | [P4Runtime](./assignments/p4runtime) | Un controlador en Python instala las reglas de entrada, tránsito y salida del túnel y lee contadores por túnel. | `basic.p4`, `mycontroller.py` |
+| 3 | [Firewall](./assignments/firewall) | Firewall con estado basado en un *Bloom filter* de dos registros: solo deja entrar el tráfico TCP de conexiones iniciadas desde la red interna. | `firewall.p4` |
+| 4 | [Balanceo de carga](./assignments/load_balance) | ECMP: un hash sobre la 5-tupla reparte los flujos UDP entre dos caminos. | `load_balance.p4` |
+| 4 | [Balanceo de carga controlado](./assignments/controlled_load_balance) | El controlador lee contadores de bytes por enlace y reajusta cada 2 s las 100 entradas de la tabla de siguiente salto para equilibrar la carga. | `load_balance.p4`, `balance_controller.py` |
 
-For your assignments you will need to write functionalities into the P4 base code that we provide you.
-The description of each assignment is in it's respective folder.
+Cada carpeta tiene un README con un resumen de la solución al principio, seguido del enunciado original.
 
-1. Assignment 1: Introduction and Language Basics
-    * [Basic Forwarding](./assignments/basic/README.md)
-    * [Basic Tunneling](./assignments/basic_tunnel/README.md)
+## Estructura del repositorio
 
-2. Assignment 2: P4Runtime and the Control Plane
-    * [P4Runtime](./assignments/p4runtime/README.md)
+```
+.
+├── assignments/     # Prácticas resueltas (una carpeta por práctica)
+├── base_code/       # Esqueleto basic.p4 del que parten las prácticas
+├── utils/           # Scripts para lanzar Mininet, BMv2 y la librería p4runtime_lib
+├── P4_Lab_Slides_2026.pdf   # Diapositivas de la clase introductoria
+├── P4_tutorial.pdf          # Tutorial de p4.org
+└── p4-cheat-sheet.pdf       # Chuleta de sintaxis de P4
+```
 
-3. Assignment 3: Firewall
-    * [Firewall](./assignments/firewall/README.md)
+## Cómo ejecutarlo
 
-4. Assignment 4: Load Balance
-    * [Load Balance ](./assignments/load_balance/README.md)
-    * [Controlled Load Balance](./assignments/controlled_load_balance/README.md)
+Las prácticas se ejecutan en la máquina virtual del curso, que trae instalados `p4c`, BMv2, Mininet y P4Runtime (usuario `p4`, contraseña `p4`).
 
-## Resources
-This repo contains:
-* slides from the introductory lecture (`P4_Lab_Slides_2026.pdf`)
-* alternative slides from [p4.org](https://p4.org/) (`P4_tutorial.pdf`)
-* a P4 Cheat Sheet containing various examples that you can use (`p4-cheat-sheet.pdf`)
+```bash
+git clone https://github.com/Danbag17/P4.git
+cd P4/assignments/basic
+make run        # compila el programa P4 y arranca la topología en Mininet
+```
 
-All excercises in this repository use the v1model architecture, the documentation for which is available at:
-1. The BMv2 Simple Switch target document accessible [here](https://github.com/p4lang/behavioral-model/blob/master/docs/simple_switch.md) talks mainly about the v1model architecture.
-2. The include file `v1model.p4` has extensive comments and can be accessed [here](https://github.com/p4lang/p4c/blob/master/p4include/v1model.p4).
+Dentro de Mininet:
 
-If you use code from any of these places, or from other places on the internet, please indicate so with a comment.
+```bash
+mininet> pingall
+mininet> exit
+```
 
-## Obtaining required software
+Para parar y limpiar:
 
-You can find the VM on the Canvas Files page: https://canvas.utwente.nl/courses/19076/files?preview=5675187
+```bash
+make stop       # para Mininet
+make clean      # además borra build/, logs/ y pcaps/
+```
 
-Use the VM as follows:
+En las prácticas con controlador (`p4runtime`, `controlled_load_balance`), el controlador se lanza en otra terminal mientras Mininet está en marcha:
 
-1. Make sure you have [VirtualBox](https://www.virtualbox.org/) installed.
-2. Download the VM from the link.
-3. Within VirtualBox: File>Import Appliance
-4. Follow the steps
-5. This repository is already cloned in the VM under `~/p4labs/`
-6. Please run `git pull` inside of the repository to obtain the latest version
-7. To get your code onto the VM you can: 
-    * Write the code on the VM. 
-    * Write the code on your own computer and set up a VirtualBox's shared folder to 
-      move the code to the VM
-    * Write the code on your own computer and copy it using `scp` over an ssh connection.
-      The virtual machine should be listening for ssh connections on `localhost:2222`
-    * Use Visual Studio Code that connects with the VM in background where you write code in your host machine.
-8. Use proper git practices and commit your code often so that you can pull any further updates of the exercises
+```bash
+python3 mycontroller.py            # práctica p4runtime
+python3 balance_controller.py      # práctica controlled_load_balance
+```
 
-The account is `p4` and the password is `p4`.
+## Documentación de referencia
+
+- [BMv2 simple_switch](https://github.com/p4lang/behavioral-model/blob/main/docs/simple_switch.md): descripción de la arquitectura v1model.
+- [`v1model.p4`](https://github.com/p4lang/p4c/blob/main/p4include/v1model.p4): definición comentada de la arquitectura.
+- [Especificación de P4₁₆](https://p4.org/specs/)
+
+## Créditos
+
+Los enunciados, el código base, las utilidades y las diapositivas son material del curso ANET de la University of Twente, basado en los [tutoriales oficiales de P4](https://github.com/p4lang/tutorials).
+Las soluciones de las carpetas `assignments/` son mías.
+
+Licencia: [Apache 2.0](./LICENSE).

@@ -1,3 +1,22 @@
+# Práctica 1a: Reenvío básico IPv4
+
+## Solución implementada
+
+Archivo: [`basic.p4`](./basic.p4)
+
+- **Parser**: extrae la cabecera Ethernet y, si el EtherType es IPv4 (`0x0800`), también la cabecera IPv4.
+- **Acción `ipv4_forward`**: fija el puerto de salida, pone como MAC de origen la antigua MAC de destino, pone la MAC del siguiente salto como destino y decrementa el TTL.
+- **Tabla `ipv4_lpm`**: búsqueda por prefijo más largo sobre la IP de destino; solo se aplica si la cabecera IPv4 es válida.
+- **Deparser**: vuelve a emitir Ethernet e IPv4.
+
+Resultado esperado: `pingall` funciona en la topología *pod-topo*.
+
+**Ejecutar:** `make run` y, dentro de Mininet, `pingall`.
+
+---
+
+## Enunciado original
+
 # Implementing Basic Forwarding
 
 ## Introduction

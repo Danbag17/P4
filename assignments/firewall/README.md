@@ -1,3 +1,23 @@
+# Práctica 3: Firewall con estado
+
+## Solución implementada
+
+Archivos: [`firewall.p4`](./firewall.p4) (switch `s1`), [`basic.p4`](./basic.p4) (resto de switches)
+
+- **Parser** ampliado: Ethernet → IPv4 → TCP (protocolo 6).
+- **Bloom filter** con dos registros (`bloom_filter_1`, `bloom_filter_2`) indexados por dos hashes distintos de la 4-tupla TCP (`compute_hashes`).
+- **Tabla `check_ports`**: decide si el paquete va de la red interna a la externa (`direction = 0`) o al revés (`direction = 1`), y solo se filtra si hay coincidencia.
+- **Tráfico saliente** (interna → externa): si es un SYN, marca la conexión con un 1 en ambos registros.
+- **Tráfico entrante** (externa → interna): calcula los hashes con origen y destino intercambiados y solo deja pasar el paquete si **los dos** registros valen 1. Si no, lo descarta.
+
+Resultado: `h1` y `h2` pueden abrir conexiones hacia `h3` y `h4`, pero `h3` y `h4` solo pueden responder a ellas, no iniciarlas.
+
+**Ejecutar:** `make run`. En Mininet, `iperf h1 h3` funciona e `iperf h3 h1` no.
+
+---
+
+## Enunciado original
+
 # Implementing A Basic Stateful Firewall
 
 ## Introduction

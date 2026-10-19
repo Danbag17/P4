@@ -1,3 +1,21 @@
+# Práctica 1b: Túnel básico
+
+## Solución implementada
+
+Archivo: [`basic.p4`](./basic.p4)
+
+- **Cabecera nueva `myTunnel_t`** con `proto_id` (protocolo encapsulado) y `dst_id` (destino del túnel), identificada por el EtherType `0x1212`.
+- **Parser**: Ethernet → `myTunnel` (si el EtherType es `0x1212`) → IPv4 (si `proto_id` indica IPv4).
+- **Tabla `myTunnel_exact`**: coincidencia exacta sobre `dst_id` con la acción `myTunnel_forward`, que solo fija el puerto de salida.
+- **Control de entrada**: si el paquete lleva cabecera de túnel se encamina con `myTunnel_exact`; si no, con el reenvío IPv4 normal (`ipv4_lpm`).
+- **Deparser**: emite Ethernet, `myTunnel` e IPv4, en ese orden.
+
+**Ejecutar:** `make run`, y en Mininet `xterm h1 h2`. Después, `python3 receive.py` en `h2` y `python3 send.py 10.0.2.2 "hola" --dst_id 2` desde `h1`.
+
+---
+
+## Enunciado original
+
 # Implementing Basic Tunneling
 
 ## Introduction

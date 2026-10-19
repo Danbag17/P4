@@ -1,5 +1,18 @@
+# Salida de compilación y ejecución
 build/
 logs/
 pcaps/
+*.pcap
+*.log
+*.p4info.txt
+
+# Python
 __pycache__/
 *.pyc
+
+# Editores y sistema operativo
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
