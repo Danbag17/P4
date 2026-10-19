@@ -2,6 +2,9 @@
 #include <core.p4>
 #include <v1model.p4>
 
+const bit<16> TYPE_IPV4 = 0x800;
+const bit<8> TYPE_UDP = 17;
+
 /*************************************************************************
 *********************** H E A D E R S  ***********************************
 *************************************************************************/
@@ -52,10 +55,30 @@ parser MyParser(packet_in packet,
                 out headers hdr,
                 inout metadata meta,
                 inout standard_metadata_t standard_metadata) {
-    state start {
+
+       state start {
+        transition parse_ethernet;
+    }
+    state parse_ethernet{
+        packet.extract(hdr.ethernet);
+        transition select(hdr.ethernet.etherType) {
+            TYPE_IPV4: parse_ipv4;
+            default: accept;
+        }
+    }
+    state parse_ipv4 {
+        packet.extract(hdr.ipv4);
+        transition select(hdr.ipv4.protocol) {
+            TYPE_UDP: parse_udp;
+            default: accept;
+        }
+    }
+    state parse_udp {
+        packet.extract(hdr.udp);
         transition accept;
     }
 }
+
 
 /*************************************************************************
 ************   C H E C K S U M    V E R I F I C A T I O N   *************
@@ -80,6 +103,8 @@ control MyIngress(inout headers hdr,
     action set_ecmp_select(bit<16> ecmp_base, bit<32> ecmp_count) {
         /* TODO: hash on 5-tuple and save the hash result in meta.ecmp_select
            so that the ecmp_nhop table can use it to make a forwarding decision accordingly */
+    
+          hash(meta.ecmp_select, HashAlgorithm.crc16, ecmp_base, { hdr.ipv4.srcAddr, hdr.ipv4.dstAddr, hdr.ipv4.protocol, hdr.udp.srcPort, hdr.udp.dstPort }, ecmp_count);
     }
 
     action set_nhop(bit<48> nhop_dmac, bit<32> nhop_ipv4, bit<9> port) {
@@ -120,7 +145,7 @@ control MyIngress(inout headers hdr,
         /*
          * Stub code to make the program compile 
          */
-        if (true) {
+        if (hdr.ipv4.isValid() && hdr.udp.isValid() && hdr.ipv4.ttl > 0) {
             ecmp_group.apply();
             ecmp_nhop.apply();
         }

@@ -76,7 +76,25 @@ parser MyParser(packet_in packet,
                 inout metadata meta,
                 inout standard_metadata_t standard_metadata) {
 
-    state start {
+       state start {
+        transition parse_ethernet;
+    }
+    state parse_ethernet{
+        packet.extract(hdr.ethernet);
+        transition select(hdr.ethernet.etherType) {
+            TYPE_IPV4: parse_ipv4;
+            default: accept;
+        }
+    }
+    state parse_ipv4 {
+        packet.extract(hdr.ipv4);
+        transition select(hdr.ipv4.protocol) {
+            TYPE_TCP: parse_tcp;
+            default: accept;
+        }
+    }
+    state parse_tcp {
+        packet.extract(hdr.tcp);
         transition accept;
     }
 }
@@ -127,9 +145,14 @@ control MyIngress(inout headers hdr,
     }
 
     action ipv4_forward(macAddr_t dstAddr, egressSpec_t port) {
+        standard_metadata.egress_spec = port;
+        hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
+        hdr.ethernet.dstAddr = dstAddr;
+        hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
     }
 
     action set_direction(bit dir){
+        direction = dir;
     }
 
     table ipv4_lpm {
@@ -204,6 +227,25 @@ control MyIngress(inout headers hdr,
                     if((read_val_one AND read_val_two) != 1):
                         drop()
         */
+
+        if(hdr.tcp.isValid()){
+            if(check_ports.apply().hit){
+                if(direction == 0){
+                    compute_hashes(hdr.ipv4.srcAddr, hdr.ipv4.dstAddr, hdr.tcp.srcPort, hdr.tcp.dstPort);
+                    if(hdr.tcp.syn == 1){
+                        bloom_filter_1.write(reg_pos_one, 1);
+                        bloom_filter_2.write(reg_pos_two, 1);
+                    }
+                } else {
+                    compute_hashes(hdr.ipv4.dstAddr, hdr.ipv4.srcAddr, hdr.tcp.dstPort, hdr.tcp.srcPort);
+                    bloom_filter_1.read(reg_val_one, reg_pos_one);
+                    bloom_filter_2.read(reg_val_two, reg_pos_two);
+                    if((reg_val_one & reg_val_two) != 1){
+                        drop();
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -248,6 +290,9 @@ control MyComputeChecksum(inout headers hdr, inout metadata meta) {
 
 control MyDeparser(packet_out packet, in headers hdr) {
     apply {
+        packet.emit(hdr.ethernet);
+        packet.emit(hdr.ipv4);
+        packet.emit(hdr.tcp);
     }
 }
 

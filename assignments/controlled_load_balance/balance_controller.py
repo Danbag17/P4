@@ -37,7 +37,7 @@ BALANCER_OUTGOING_DESTINATIONS = [
 ]
 
 def writeEcmpGroupValues(p4info_helper, sw):
-    print("TODO: writeEcmpGroupValues")
+    
     # TODO 
     # 1) Build a valid table entry for the ecmp_group table
     # and install it on the switch. 
@@ -46,9 +46,21 @@ def writeEcmpGroupValues(p4info_helper, sw):
     # If you are unsure how to build a table entry or how to 
     # install it on the switch, have a look at the p4runtime 
     # exercise again
+   
+    table_entry = p4info_helper.buildTableEntry(
+    table_name="MyIngress.ecmp_group",       
+    match_fields={
+        "hdr.ipv4.dstAddr" : ("10.0.0.1", 32)      
+    },
+    action_name="MyIngress.set_ecmp_select",    
+    action_params={
+        "ecmp_base" : 1,
+        "ecmp_count" : NHOP_TABLE_ENTRIES          
+    })
+    sw.WriteTableEntry(table_entry)         
+
 
 def writeEcmpNextHopRules(p4info_helper, sw, entry_amounts, update_type=p4runtime_lib.helper.P4InfoHelper.UpdateType.INSERT):
-    print("TODO: writeEcmpNextHopRules")
     # TODO 
     # 2) Build the table entries for the next_hop table
     # and install them on the switch. 
@@ -68,6 +80,21 @@ def writeEcmpNextHopRules(p4info_helper, sw, entry_amounts, update_type=p4runtim
     # Make sure to pass the update_type argument into each call of 
     # sw.WriteTableEntry as keyword argument. e.g. 
     # sw.WriteTableEntry(table_entry, update_type=update_type)
+    for i in range(NHOP_TABLE_ENTRIES):     
+        if (i < entry_amounts[0]):
+            link = 0
+        else:
+            link = 1
+
+        table_entry = p4info_helper.buildTableEntry(
+        table_name="MyIngress.ecmp_nhop",       
+        match_fields={ "meta.ecmp_select": i + 1 },
+        action_name="MyIngress.set_nhop",    
+        action_params=
+            BALANCER_OUTGOING_DESTINATIONS[link]         
+        )
+        sw.WriteTableEntry(table_entry,update_type=update_type)         
+
 
 def writeEgressSendFrameRules(p4info_helper, sw):
     table_entry = p4info_helper.buildTableEntry(
@@ -161,7 +188,7 @@ def setupBalancingSwitch(p4info_helper, bmv2_file_path):
     writeEcmpGroupValues(p4info_helper, sw)
     # TODO 8) Call writeEcmpNextHopRules with a 50/50 entry_amounts and update_type=p4info_helper.UpdateType.INSERT
     writeEgressSendFrameRules(p4info_helper, sw)
-
+    writeEcmpNextHopRules(p4info_helper, sw, (50, 50), update_type=p4info_helper.UpdateType.INSERT)
     return sw
 
 def main(p4info_file_path, bmv2_file_path):
@@ -180,9 +207,9 @@ def main(p4info_file_path, bmv2_file_path):
             # TODO 
             # 9.1) Use getByteCounter to read out the counters for each link
             #    Uncomment:
-            #c1 = getByteCounter(p4info_helper, sw, counter_name, index)
-            #c2 = getByteCounter(p4info_helper, sw, counter_name, index)
-            #entry_amounts = balanceEntryAmounts(c1, c2)
+            c1 = getByteCounter(p4info_helper, sw, "MyIngress.enlace", 0)
+            c2 = getByteCounter(p4info_helper, sw, "MyIngress.enlace", 1)
+            entry_amounts = balanceEntryAmounts(c1, c2)
             
             
             # TODO 
@@ -193,7 +220,10 @@ def main(p4info_file_path, bmv2_file_path):
             #readTableRules(p4info_helper, sw)
             
             # Uncomment the following line to print the current entry_amounts and loads.
-            #print(f"load to h2: {c1}; load to h3: {c2}; balancing ratio: {entry_amounts}")
+            print(f"load to h2: {c1}; load to h3: {c2}; balancing ratio: {entry_amounts}")
+
+            writeEcmpNextHopRules(p4info_helper, sw, entry_amounts, update_type=p4info_helper.UpdateType.MODIFY)
+
 
     except KeyboardInterrupt:
         print(" Shutting down.")

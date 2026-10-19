@@ -3,6 +3,9 @@
 #include <v1model.p4>
 
 const bit<16> TYPE_IPV4 = 0x800;
+const bit<16> TYPE_MYTUNNEL = 0x1212;
+const bit<32> MAX_TUNNEL_ID = 1<<16;
+
 
 /*************************************************************************
 *********************** H E A D E R S  ***********************************
@@ -16,6 +19,11 @@ header ethernet_t {
     macAddr_t dstAddr;
     macAddr_t srcAddr;
     bit<16>   etherType;
+}
+
+header myTunnel_t{
+    bit<16>   proto_id;
+    bit<16>   dst_id;
 }
 
 header ipv4_t {
@@ -39,20 +47,47 @@ struct metadata {
 
 struct headers {
     ethernet_t   ethernet;
+    myTunnel_t   myTunnel;
     ipv4_t       ipv4;
 }
 
 /*************************************************************************
 *********************** P A R S E R  ***********************************
 *************************************************************************/
+//I used only the cheat-sheet only the parsing part, I did not use the cheat-sheet for the rest of the code
 
 parser MyParser(packet_in packet,
                 out headers hdr,
                 inout metadata meta,
                 inout standard_metadata_t standard_metadata) {
 
+    //start and go to the first state the ethernet one
     state start {
+        transition parse_ethernet;
+    
+    }
+    //parse the ethernet header and check if it is ipv4 or not if is ipv4 then we go to the next state because we only now know how to parse the ipv4 header, if it is not ipv4 then we go to the accept state because we do not know how to parse it
+    state parse_ethernet{
+        packet.extract(hdr.ethernet);
+        transition select(hdr.ethernet.etherType) {
+            TYPE_IPV4: parse_ipv4;
+            TYPE_MYTUNNEL: parse_myTunnel;
+            default: accept;
+        }
+    }
+    //parse the ipv4 header and go to accept state
+    state parse_ipv4 {
+        packet.extract(hdr.ipv4);
         transition accept;
+    }
+    //parse the myTunnel header and go to accept state
+    state parse_myTunnel {
+        packet.extract(hdr.myTunnel);
+        transition select(hdr.myTunnel.proto_id) {
+            TYPE_IPV4: parse_ipv4;
+            default: accept;
+        }
+    
     }
 }
 
@@ -73,11 +108,43 @@ control MyVerifyChecksum(inout headers hdr, inout metadata meta) {
 control MyIngress(inout headers hdr,
                   inout metadata meta,
                   inout standard_metadata_t standard_metadata) {
+    
+    counter(MAX_TUNNEL_ID,CounterType.packets_and_bytes)ingressTunnelCounter ;
+    counter(MAX_TUNNEL_ID,CounterType.packets_and_bytes)egressTunnelCounter ;
+
+
     action drop() {
         mark_to_drop(standard_metadata);
     }
-    
+    //action of forwarding the packet to the next hop, we set the egress port, 
+    //we set the source mac address to be the destination mac address and we set the 
+    //destination mac address to be the one that we get from the table, we also decrement the ttl by 1
+    //because the packet has passed through a router and the next port is the one that we get from the 
+    //table, we also decrement the ttl by 1 because the packet has passed through a router and the next
+     //port is the one that we get from the table
     action ipv4_forward(macAddr_t dstAddr, egressSpec_t port) {
+        standard_metadata.egress_spec = port;
+        hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
+        hdr.ethernet.dstAddr = dstAddr;
+        hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
+    }
+    action myTunnel_forward(egressSpec_t port) {
+        standard_metadata.egress_spec = port;
+    }
+    action myTunnel_ingress( bit<16> dst_id ) {
+        hdr.myTunnel.setValid();
+        hdr.myTunnel.dst_id= dst_id;
+        hdr.myTunnel.proto_id=hdr.ethernet.etherType;
+        hdr.ethernet.etherType=TYPE_MYTUNNEL;
+        ingressTunnelCounter.count((bit<32>) hdr.myTunnel.dst_id);
+    }
+
+    action myTunnel_egress(macAddr_t dstAddr, egressSpec_t port) {
+        standard_metadata.egress_spec = port;
+        hdr.ethernet.dstAddr = dstAddr;
+        hdr.ethernet.etherType=hdr.myTunnel.proto_id;
+        egressTunnelCounter.count((bit<32>) hdr.myTunnel.dst_id);
+        hdr.myTunnel.setInvalid();
     }
     
     table ipv4_lpm {
@@ -86,17 +153,37 @@ control MyIngress(inout headers hdr,
         }
         actions = {
             ipv4_forward;
+            myTunnel_ingress;
             drop;
             NoAction;
         }
         size = 1024;
         default_action = NoAction();
     }
-    
+    table myTunnel_exact {
+        key = {
+            hdr.myTunnel.dst_id: exact;
+        }
+        actions = {
+            myTunnel_forward;
+            myTunnel_egress;
+            drop;
+            NoAction;
+        }
+        size = 1024;
+        default_action = NoAction();
+    }
+//I add the if statement to check if the myTunnel header is valid and if it is valid then we apply the myTunnel_exact table, if it is not valid then we check if the ipv4 header is valid and if it is valid then we apply the ipv4_lpm table, if it is not valid then we do nothing because we do not know how to handle the packet
     apply {
-        ipv4_lpm.apply();
+        if(!hdr.myTunnel.isValid() && hdr.ipv4.isValid()) {
+             ipv4_lpm.apply();
+        }
+       if (hdr.myTunnel.isValid()) {
+            myTunnel_exact.apply();        
+        }      
     }
 }
+
 
 /*************************************************************************
 ****************  E G R E S S   P R O C E S S I N G   *******************
@@ -136,12 +223,14 @@ control MyComputeChecksum(inout headers hdr, inout metadata meta) {
 /*************************************************************************
 ***********************  D E P A R S E R  *******************************
 *************************************************************************/
-
+//we make the deparser of the headers that we have, we emit the ethernet header and then the ipv4 header
 control MyDeparser(packet_out packet, in headers hdr) {
     apply {
+        packet.emit(hdr.ethernet);
+        packet.emit(hdr.myTunnel);
+        packet.emit(hdr.ipv4);
     }
 }
-
 /*************************************************************************
 ***********************  S W I T C H  *******************************
 *************************************************************************/
